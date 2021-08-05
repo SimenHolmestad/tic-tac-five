@@ -9,8 +9,13 @@ app.use(express.json());
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://10.0.0.126:3000'
 ];
+
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL)
+  // tslint:disable-next-line:no-console
+  console.log("--------\n\nOn your local network, the frontend is running on " + process.env.FRONTEND_URL + "\n\n--------");
+}
 
 const corsOptions: cors.CorsOptions = {
   origin: allowedOrigins

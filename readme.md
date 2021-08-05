@@ -3,7 +3,7 @@ A game for playing 5 in a row with your friends at home. The rules are the same 
 
 ![Tic-tac-five screenshot](docs/frontend-screenshot.png)
 
-More info on the backend can be found [here](backend/readme.md) and more info on the frontend can be found [here](frontend/readme.md).
+More info on the backend can be found [here](backend) and more info on the frontend can be found [here](frontend).
 
 Currently, the app has no authentication whatsoever.
 
@@ -28,10 +28,22 @@ Build the frontend by doing:
 docker build -t tic-tac-five-frontend ./frontend
 ```
 
-Then run the whole thing by doing:
+Next, you should create a file named `.env` setting the `BASE_IP` variable (the local IP address). The content of the `.env` file can for example be:
+
+```
+BASE_IP=10.0.0.42
+```
+
+Alternatively, if you're on a mac (or possibly linux), you can run the following command to create the correct `.env` file:
+
+``` sh
+echo "BASE_IP=$(ipconfig getifaddr en0)" > .env
+```
+
+When the `.env` file is in place, run the whole app by doing:
 
 ``` sh
 docker-compose up
 ```
 
-You should now have the app running at `http://localhost:3000`
+The app should now run on your local IP address so you can access it from devices on the same network.
