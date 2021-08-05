@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  tic-tac-five-frontend:
+    image: tic-tac-five-frontend
+    stdin_open: true
+    ports:
+      - 3000:3000
+    networks:
+      - tic-tac-five-network
+    depends_on:
+      - tic-tac-five-backend
+
+  tic-tac-five-backend:
+    image: tic-tac-five-backend
+    ports:
+      - 8080:8080
+    networks:
+      - tic-tac-five-network
+    depends_on:
+      - mongodb_container
+
+  mongodb_container:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    networks:
+      - tic-tac-five-network
+    volumes:
+      - mongodb_data_container:/data/db
+
+networks:
+  tic-tac-five-network:
+    driver: bridge
+
+volumes:
+  mongodb_data_container:
