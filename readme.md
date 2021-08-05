@@ -47,3 +47,11 @@ docker-compose up
 ```
 
 The app should now run on your local IP address so you can access it from devices on the same network.
+
+## Start script
+All of the steps above after docker installation is gathered in the file `start.sh`, but this might not work on every type of machine. To run the `start.sh` script, do:
+
+``` sh
+sh start.sh
+```
+
