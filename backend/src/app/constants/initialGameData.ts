@@ -27,6 +27,8 @@ const initialGameData: GameDataWithHistory = {
   history: [[10, 10, "X"]],
   winner: null,
   winningLine: null,
+  nextGame: null,
+  previousGame: null,
 };
 
 export default initialGameData;
