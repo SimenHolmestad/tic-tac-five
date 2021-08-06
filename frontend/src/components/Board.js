@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import BoardSquare from './BoardSquare';
 import './Board.css';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,6 +8,8 @@ import { fetchGameData } from './../actions/gameDataActions';
 function Board() {
   const dispatch = useDispatch();
   const gameId = useSelector((state) => state.gameInfo.gameId);
+  const history = useHistory();
+  const playType = useSelector((state) => state.gameInfo.playType);
 
   // Update game data every second
   useEffect(() => {
@@ -14,11 +17,11 @@ function Board() {
       return undefined;
     }
     dispatch(fetchGameData(gameId));
-    const interval = setInterval(() => dispatch(fetchGameData(gameId)), 1000);
+    const interval = setInterval(() => dispatch(fetchGameData(gameId, playType, history)), 1000);
     return () => {
       clearInterval(interval);
     };
-  }, [dispatch, gameId]);
+  }, [dispatch, gameId, history, playType]);
 
   // Get gameData and add loading text if there is no gameData
   const gameData = useSelector((state) => state.gameData);
