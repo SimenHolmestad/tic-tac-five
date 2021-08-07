@@ -8,7 +8,7 @@ function createRematchName(oldName: string): string {
 
     const rematchPart = rematchParts[0]
     const originalName = oldName.split(rematchPart)[0]
-    const newRematchNumber = parseInt(rematchPart.slice(11)) + 1
+    const newRematchNumber = parseInt(rematchPart.slice(11), 10) + 1
     return originalName + ' - rematch ' + newRematchNumber
 }
 
