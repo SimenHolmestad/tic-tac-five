@@ -9,13 +9,45 @@ export function updateGameData (newGameData) {
   };
 }
 
-export function fetchGameData(gameId) {
+export function createUrlForGameAndPlayType(gameId, playType) {
+  let newPlayType = playType
+  if (playType === 'X_player') {
+    newPlayType = 'O_player'
+  } else if (playType === 'O_player') {
+    newPlayType = 'X_player'
+  }
+
+  return '/play/' + gameId + '/' + newPlayType
+}
+
+export function fetchGameData(gameId, playType, history) {
   return async function(dispatch) {
     const url = process.env.REACT_APP_API_URL + '/api/games/' + gameId;
     try {
       const response = await fetch(url);
-      const data = await response.json();
-      dispatch(updateGameData(data)); // dispatch updateGameData after receiving data
+      const gameData = await response.json();
+      dispatch(updateGameData(gameData));
+      console.log(playType);
+      if (playType === 'observer' && gameData.nextGame) {
+        history.push(createUrlForGameAndPlayType(gameData.nextGame, playType))
+      }
+    } catch (error) {
+      console.log('Could not fetch game data from server', error);
+    }
+  };
+};
+
+export function createRematch(gameId, history, playType) {
+  return async function() {
+    const url = process.env.REACT_APP_API_URL + '/api/games/' + gameId + '/rematch';
+    try {
+      const response = await fetch(url, {
+        method: 'post',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({})
+      });
+      const gameData = await response.json();
+      history.push(createUrlForGameAndPlayType(gameData._id, playType))
     } catch (error) {
       console.log('Could not fetch game data from server', error);
     }

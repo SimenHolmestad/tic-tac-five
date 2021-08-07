@@ -2,7 +2,9 @@ import express from 'express';
 import Game from './../app/models/game';
 import initialGameData from './../app/constants/initialGameData';
 import checkForWinner from './../app/utils/checkForWinner';
+import createRematchName from './../app/utils/createRematchName';
 import {
+  GameData,
   GameDataWithTime,
   GameDataWithHistoryAndTime,
 } from "./../types";
@@ -72,6 +74,39 @@ router.route('/games/:game_id').get(async (req, res) => {
   catch (err) {
     res.send(err);
   }
+});
+
+router.route('/games/:game_id/rematch').post(async (req, res) => {
+  try {
+    const gameExists = await Game.exists({ _id: req.params.game_id });
+    if (! gameExists) {
+      res.status(404).send('The game to rematch did not exist');
+      return;
+    }
+  }
+  catch (err) {
+    // tslint:disable-next-line:no-console
+    console.log(err);
+    res.send(err);
+  }
+
+  const currentGame = await Game.findById(req.params.game_id);
+  if (!currentGame.winningLine) {
+    res.status(200).send('Cannot rematch when game is not finished');
+    return;
+  }
+
+  const rematchGame = new Game({
+    ...initialGameData,
+    name: createRematchName(currentGame.name),
+    previousGame: currentGame._id,
+  })
+
+  await rematchGame.save()
+
+  currentGame.nextGame = rematchGame._id
+  await currentGame.save()
+  res.json(rematchGame);
 });
 
 router.route('/games/:game_id/move').post(async (req, res) => {

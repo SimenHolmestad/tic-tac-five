@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose'
 type CellState = "-" | "X" | "O"
 type Player = "X" | "O"
 
@@ -13,6 +14,8 @@ type GameData = {
     nextToMove: CellState,
     winner: null | Player,
     winningLine: null | Array<number>,
+    previousGame: null | ObjectId,
+    nextGame: null | ObjectId,
 }
 
 interface GameDataWithHistory extends GameData {

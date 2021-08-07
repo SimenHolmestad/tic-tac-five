@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Board from './Board';
 import NewGame from './NewGame';
+import RematchButtons from './RematchButtons';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -46,6 +47,7 @@ function Game(props) {
       <h2><Link to={''}>Back to menu</Link></h2>
       <Board/>
       { infoText }
+      <RematchButtons/>
       { winner ? <NewGame/> : null }
       { 'In game as: ' + playTypeString }
       <ul>
