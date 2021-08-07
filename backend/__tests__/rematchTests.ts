@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import supertest from 'supertest';
 import app from './../src/app';
 import Game from './../src/app/models/game';
+import createRematchName from './../src/app/utils/createRematchName';
 import initialGameData from './../src/app/constants/initialGameData';
 
 const request = supertest(app);
@@ -107,6 +108,39 @@ describe('rematch tests', () => {
 
     const rematchGame = response.body
     expect(rematchGame.previousGame).toBe(String(game_id));
+  });
+
+  it('First rematch name should end with rematch 1', async () => {
+    const gameName = 'Test game'
+    const rematchName = createRematchName(gameName)
+    expect(rematchName).toBe('Test game - rematch 1')
+  });
+
+  it('Second rematch name should end with rematch 1', async () => {
+    const gameName = 'Test game - rematch 1'
+    const rematchName = createRematchName(gameName)
+    expect(rematchName).toBe('Test game - rematch 2')
+  });
+
+  it('Tenth rematch name should end with rematch 10', async () => {
+    const gameName = 'Test game - rematch 9'
+    const rematchName = createRematchName(gameName)
+    expect(rematchName).toBe('Test game - rematch 10')
+  });
+
+  it('Rematch game should have correct name', async () => {
+    const finishedGame = new Game({
+        ...initialGameData,
+        name: "The test game - rematch 999",
+        winningLine: [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+    });
+    await finishedGame.save();
+
+    const game_id = finishedGame._id;
+    const response = await request.post('/api/games/' + game_id + '/rematch').send({});
+
+    const rematchGame = response.body
+    expect(rematchGame.name).toBe(String("The test game - rematch 1000"));
   });
 
 });

@@ -2,7 +2,9 @@ import express from 'express';
 import Game from './../app/models/game';
 import initialGameData from './../app/constants/initialGameData';
 import checkForWinner from './../app/utils/checkForWinner';
+import createRematchName from './../app/utils/createRematchName';
 import {
+  GameData,
   GameDataWithTime,
   GameDataWithHistoryAndTime,
 } from "./../types";
@@ -96,7 +98,7 @@ router.route('/games/:game_id/rematch').post(async (req, res) => {
 
   const rematchGame = new Game({
     ...initialGameData,
-    name: "rematch",
+    name: createRematchName(currentGame.name),
     previousGame: currentGame._id,
   })
 
